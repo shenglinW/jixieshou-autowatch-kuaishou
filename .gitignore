@@ -3,3 +3,5 @@
 build
 projectFilesBackup
 app/build
+*.iml
+local.properties
