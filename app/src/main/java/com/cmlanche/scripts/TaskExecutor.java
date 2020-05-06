@@ -68,6 +68,9 @@ public class TaskExecutor {
                                 case Constants.pkg_kuaishou:
                                     script = new KuaishouScript(info);
                                     break;
+                                case Constants.pkg_kuaikandian:
+                                    script = new KuaiKanDianScript(info);
+                                    break;
                             }
                             if (script != null) {
                                 currentScript = script;
