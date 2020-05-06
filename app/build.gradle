@@ -57,12 +57,4 @@ dependencies {
     implementation 'com.squareup:otto:1.3.8'
     implementation group: 'cn.com.riversoft', name: 'weixin-pay', version: '0.9.8'
 
-    implementation files('libs/umeng-analytics-8.1.4.jar')
-    implementation files('libs/umeng-common-2.1.8.jar')
-    implementation files('libs/umeng-share-core-6.9.6.jar')
-    implementation files('libs/umeng-sharetool-6.9.6.jar')
-    implementation files('libs/umeng-share-QQ-simplify-6.9.6.jar')
-    implementation files('libs/umeng-share-sina-simplify-6.9.6.jar')
-    implementation files('libs/umeng-share-wechat-simplify-6.9.6.jar')
-    implementation files('libs/umeng-shareboard-widget-6.9.6.jar')
 }
