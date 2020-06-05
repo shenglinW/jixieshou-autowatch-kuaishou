@@ -16,7 +16,6 @@ import com.cmlanche.activity.NewOrEditTaskActivity;
 import com.cmlanche.activity.TaskTypeListActivity;
 import com.cmlanche.common.PackageUtils;
 import com.cmlanche.common.SPService;
-import com.cmlanche.common.leancloud.InitTask;
 import com.cmlanche.core.bus.BusEvent;
 import com.cmlanche.core.bus.BusManager;
 import com.cmlanche.core.service.MyAccessbilityService;
@@ -39,8 +38,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import cn.leancloud.AVOSCloud;
 
 import static com.cmlanche.core.bus.EventType.accessiblity_connected;
 import static com.cmlanche.core.bus.EventType.no_roots_alert;
@@ -71,7 +68,6 @@ public class MyApplication extends Application {
         super.onCreate();
         Logger.setDebug(true);
         initUmeng();
-        initLeancloud();
         SPService.init(this);
         appInstance = this;
 
@@ -139,15 +135,6 @@ public class MyApplication extends Application {
         }
     }
 
-    private void initLeancloud() {
-        try {
-            AVOSCloud.initialize("你的leancloud appid", "你的leancloud appsecret");
-            new InitTask().execute();
-        } catch (Exception e) {
-            Logger.e(e.getMessage(), e);
-        }
-    }
-
     /**
      * Get Display
      *
@@ -208,7 +195,7 @@ public class MyApplication extends Application {
                 .setY(0)
                 .setX(0)
                 .setFilter(false, MainActivity.class, NewOrEditTaskActivity.class, TaskTypeListActivity.class)
-                .setMoveType(MoveType.inactive)
+                .setMoveType(MoveType.active)
                 .setMoveStyle(500, new BounceInterpolator())
                 .setViewStateListener(mViewStateListener)
                 .setPermissionListener(new PermissionListener() {

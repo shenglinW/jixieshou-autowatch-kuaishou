@@ -18,7 +18,6 @@ import com.cmlanche.adapter.TaskListAdapter;
 import com.cmlanche.application.MyApplication;
 import com.cmlanche.common.DeviceUtils;
 import com.cmlanche.common.SPService;
-import com.cmlanche.common.leancloud.CheckUpdateTask;
 import com.cmlanche.core.service.MyAccessbilityService;
 import com.cmlanche.core.utils.AccessibilityUtils;
 import com.cmlanche.floatwindow.PermissionUtil;
@@ -74,11 +73,18 @@ public class MainActivity extends AppCompatActivity {
         taskListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                gotoEditTaskActivity(taskListAdapter.getItem(i));
+                startTask(taskListAdapter.getItem(i));
             }
         });
         descriptionView = findViewById(R.id.description);
 
+        findViewById(R.id.cleanBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SPService.cleanAll();
+                System.exit(0);
+            }
+        });
         startBtn = findViewById(R.id.startBtn);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                if(!checkPkgValid()) {
+                if (!checkPkgValid()) {
                     return;
                 }
 
@@ -140,14 +146,12 @@ public class MainActivity extends AppCompatActivity {
             taskListAdapter.notifyDataSetChanged();
         }
 
-        // 检查更新
-        new CheckUpdateTask(this).execute();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == 1) {
+        if (requestCode == 100 && resultCode == RESULT_OK) {
             // 100是新增任务
             AppInfo appInfo = JSON.parseObject(data.getStringExtra("appInfo"), AppInfo.class);
             cardView.setVisibility(View.GONE);
@@ -180,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void gotoAddNewTaskActivity() {
-        startActivityForResult(new Intent(this, NewOrEditTaskActivity.class), 100);
+        Intent it = new Intent(MainActivity.this, TaskListActivity.class);
+        startActivityForResult(it, 100);
     }
 
     private void gotoEditTaskActivity(AppInfo appInfo) {
@@ -207,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 删除某个任务
      *
-     * @param uuid 替换某任务
+     * @param uuid    替换某任务
      * @param appInfo
      */
     private void updateAppInfo(String uuid, AppInfo appInfo) {
@@ -243,15 +248,15 @@ public class MainActivity extends AppCompatActivity {
      * 分享的时候调用，动态申请权限
      */
     private void requestSharePermission() {
-        if(Build.VERSION.SDK_INT>=23){
-            String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE};
-            ActivityCompat.requestPermissions(this,mPermissionList,123);
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE};
+            ActivityCompat.requestPermissions(this, mPermissionList, 123);
         }
     }
 
     private boolean checkPkgValid() {
-        for(AppInfo appInfo: appInfos) {
-            if(!isAppExist(appInfo.getPkgName())) {
+        for (AppInfo appInfo : appInfos) {
+            if (!isAppExist(appInfo.getPkgName())) {
                 Toast.makeText(this, String.format("请先安装应用「%s」", appInfo.getAppName()), Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -263,11 +268,48 @@ public class MainActivity extends AppCompatActivity {
         ApplicationInfo info;
         try {
             info = getPackageManager().getApplicationInfo(pkgName, 0);
-        }
-        catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             info = null;
         }
         return info != null;
+    }
+
+    private void startTask(AppInfo info) {
+        if (info == null) {
+            return;
+        }
+
+        if (!isAppExist(info.getPkgName())) {
+            Toast.makeText(this, String.format("请先安装应用「%s」", info.getAppName()), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (!PermissionUtil.checkFloatPermission(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(), "没有悬浮框权限，为了保证任务能够持续，请授权", Toast.LENGTH_LONG).show();
+            try {
+                PermissionUtil.requestOverlayPermission(MainActivity.this);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        // 判断是否开启辅助服务
+        if (!AccessibilityUtils.isAccessibilitySettingsOn(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(), "请打开「机械手」的辅助服务", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            startActivity(intent);
+            return;
+        }
+
+        startService(new Intent(getApplicationContext(), MyAccessbilityService.class));
+
+        List<AppInfo> apps = new ArrayList<>();
+        apps.add(info);
+
+        MyApplication.getAppInstance().startTask(apps);
     }
 }

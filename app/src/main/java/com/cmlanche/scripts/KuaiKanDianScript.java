@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.util.Log;
 
 import com.cmlanche.application.MyApplication;
+import com.cmlanche.core.executor.ClickExecutor;
 import com.cmlanche.core.executor.builder.SwipStepBuilder;
 import com.cmlanche.core.search.ListIds;
 import com.cmlanche.core.search.node.NodeInfo;
@@ -16,12 +17,16 @@ import com.cmlanche.model.AppInfo;
 public class KuaiKanDianScript extends BaseScript {
 
     private static final String TAG  = KuaiKanDianScript.class.getSimpleName();
+    private static final long CLICK_TIMEOUT = 5 * 60 * 1000L;
     
     // 是否有检查"我知道了"
     private boolean isCheckedWozhidaole;
 
+    private long clickTime;
+
     public KuaiKanDianScript(AppInfo appInfo) {
         super(appInfo);
+        clickTime = System.currentTimeMillis();
     }
 
     @Override
@@ -39,10 +44,17 @@ public class KuaiKanDianScript extends BaseScript {
 //            }
 //        }
 
+        if (System.currentTimeMillis() - clickTime > CLICK_TIMEOUT) {
+            clickTime = System.currentTimeMillis();
+//            ActionUtils.click(MyApplication.getAppInstance().getScreenWidth() / 2,MyApplication.getAppInstance().getScreenHeight() / 2);
+        } else {
+
+        }
+
         Log.d(TAG, "executeScript: ");
         
         int x = MyApplication.getAppInstance().getScreenWidth() / 2;
-        int margin = 100;
+        int margin = 400;
         int fromY = MyApplication.getAppInstance().getScreenHeight() - margin;
         int toY = margin;
         new SwipStepBuilder().setPoints(new Point(x, fromY), new Point(x, toY)).get().execute();
@@ -50,12 +62,12 @@ public class KuaiKanDianScript extends BaseScript {
 
     @Override
     protected int getMinSleepTime() {
-        return 50000;
+        return 15000;
     }
 
     @Override
     protected int getMaxSleepTime() {
-        return 80000;
+        return 20000;
     }
 
     @Override

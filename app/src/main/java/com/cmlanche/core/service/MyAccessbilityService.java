@@ -3,6 +3,7 @@ package com.cmlanche.core.service;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityWindowInfo;
@@ -14,6 +15,7 @@ import com.cmlanche.core.bus.EventType;
 import com.cmlanche.core.utils.Logger;
 import com.cmlanche.core.utils.StringUtil;
 import com.cmlanche.core.utils.Utils;
+import com.cmlanche.utils.A11yNodeInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,13 +25,44 @@ import static com.cmlanche.core.bus.EventType.accessiblity_connected;
 
 public class MyAccessbilityService extends AccessibilityService {
 
+    private static final String TAG  = MyAccessbilityService.class.getSimpleName();
+    
     private int noRootCount = 0;
     private static final int maxNoRootCount = 3;
     private boolean isWork = false;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Logger.d("MyAccessbilityService event: " + event);
+//        Logger.d("MyAccessbilityService event: " + event);
+//
+//        // Log.d("hello", "onAccessibilityEvent: "+event.toString());
+//
+//
+//        switch (event.getEventType()) {
+//            //On Gesture events print out the entire view heirarchy!
+//
+////            case AccessibilityEvent.TYPE_GESTURE_DETECTION_START:
+////                CLog.d(A11yNodeInfo.wrap(getRootInActiveWindow()).toViewHeirarchy());
+//
+//            case AccessibilityEvent.TYPE_VIEW_CLICKED:
+//                if (event.getSource() != null) {
+//                    Log.d("hello", "onAccessibilityEvent: TYPE_VIEW_CLICKED " + event.getSource().toString());
+//                    Log.d("hello", "onAccessibilityEvent: TYPE_VIEW_CLICKED " + event.getSource().getViewIdResourceName());
+//                    Log.d("hello", "onAccessibilityEvent: TYPE_VIEW_CLICKED " + A11yNodeInfo.wrap(event.getSource()).toViewHeirarchy());
+//                    for (int i = 0; i < event.getSource().getChildCount(); i++) {
+//                        AccessibilityNodeInfo info = event.getSource().getChild(i);
+//                        if (info != null)
+//                            Log.d(TAG, "onAccessibilityEvent: TYPE_VIEW_CLICKED " + info.toString());
+//                    }
+//                }
+//
+//            default: {
+//                //The event has different types, for you, you want to look for "action clicked"
+//                if (event.getSource() != null) {
+//                    Log.d("hello", "onAccessibilityEvent: "+A11yNodeInfo.wrap(event.getSource()).toViewHeirarchy());
+//                }
+//            }
+//        }
     }
 
     @Override

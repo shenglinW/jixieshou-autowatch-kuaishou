@@ -189,4 +189,10 @@ public class SPService {
 
         putString(key, JSON.toJSONString(obj));
     }
+
+    public static void cleanAll() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
 }

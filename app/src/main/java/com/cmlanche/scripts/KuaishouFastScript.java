@@ -57,21 +57,21 @@ public class KuaishouFastScript extends BaseScript {
         if(!isTargetPkg()) {
             return false;
         }
-        // 检测评论列表是否打开
-        NodeInfo nodeInfo = findById("comment_header_count");
-        if (nodeInfo != null) {
-            return false;
-        }
-        // 检测是否在输入按钮上
-        nodeInfo = findById("at_button");
-        if (nodeInfo != null) {
-            return false;
-        }
-        // 检测是否有滑屏页面
-        nodeInfo = findById("slide_play_view_pager");
-        if (nodeInfo == null) {
-            return false;
-        }
+//        // 检测评论列表是否打开
+//        NodeInfo nodeInfo = findById("comment_header_count");
+//        if (nodeInfo != null) {
+//            return false;
+//        }
+//        // 检测是否在输入按钮上
+//        nodeInfo = findById("at_button");
+//        if (nodeInfo != null) {
+//            return false;
+//        }
+//        // 检测是否有滑屏页面
+//        nodeInfo = findById("slide_play_view_pager");
+//        if (nodeInfo == null) {
+//            return false;
+//        }
         return true;
     }
 }

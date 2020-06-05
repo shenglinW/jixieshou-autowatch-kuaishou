@@ -146,9 +146,27 @@
                 android:textSize="15sp"
                 android:textColor="#ffffff"
                 android:gravity="center"
+                android:visibility="gone"
                 android:backgroundTint="@color/colorPrimary"
                 app:cornerRadius="30dp"
                 android:text="点我启动" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cleanBtn"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="?android:attr/textAppearanceLargeInverse"
+                android:layout_weight="1"
+                android:textSize="15sp"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:visibility="visible"
+                android:backgroundTint="@color/colorPrimary"
+                app:cornerRadius="30dp"
+                android:text="重头再来" />
         </LinearLayout>
 
     </LinearLayout>
